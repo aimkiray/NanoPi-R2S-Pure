@@ -1,0 +1,33 @@
+name: pure build
+
+on:
+  repository_dispatch:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Setup timezone
+        uses: zcong1993/setup-timezone@master
+        with:
+          timezone: Asia/Shanghai
+
+      - name: Checkout
+        uses: actions/checkout@master
+        with:
+          ref: master
+          fetch-depth: 0
+          token: ${{ env.GITHUB_TOKEN }}
+
+      - name: Setup Debug Session
+        uses: csexton/debugger-action@master
+
+      - name: Friendlywrt Source
+        run: |
+          . build.sh
